@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Grades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Оценки</h1>
+
+    <!-- Форма для выбора студента и месяца -->
+    <form method="get" action="{{ url_for('teacher') }}">
+        <!-- Выбор студента -->
+        <label for="student_id">Select Student:</label>
+        <select name="student_id" id="student_id" onchange="this.form.submit()">
+            {% for student in students_list %}
+                <option value="{{ student.id }}" {% if student.id == current_student|int %}selected{% endif %}>{{ student.login }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Выбор месяца -->
+        <label for="month">Select Month:</label>
+        <select name="month" id="month" onchange="this.form.submit()">
+            {% for m in months %}
+                <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Таблица оценок -->
+    {% if students and current_student %}
+        {% set student = students[current_student] %}
+        <h2>{{ student.login }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Month</th>
+                    <th>Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in student.grades %}
+                    <tr>
+                        <td>{{ grade.subject_name }}</td>
+                        <td>{{ grade.month }}</td>
+                        <td>{{ '' if grade.grade == 0 or grade.grade is none else grade.grade }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_grade', user_id=student.id, subject_id=grade.subject_id, month=grade.month) }}">Edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">No grades for this month.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No student selected or no grades found.</p>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}">Выход</a>
+</body>
+</html>
+

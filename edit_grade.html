@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Grade</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Редактировать оценку</h1>
+    <p>Student: {{ grade.login }}</p>
+    <p>Subject: {{ grade.name }}</p>
+    <p>Month: {{ grade.month }}</p>
+    <form method="post" action="{{ url_for('update_grade', user_id=user_id, subject_id=subject_id, month=month) }}">
+        <label for="grade">New Grade:</label>
+        <input type="number" id="grade" name="grade" value="{{ grade.grade }}" min="0" max="5">
+        <button type="submit">Update</button>
+    </form>
+    <a href="{{ url_for('teacher', student_id=student_id) }}">Назад к оценкам</a>
+</body>
+</html>

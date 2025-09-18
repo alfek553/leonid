@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Grades</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Ваши оценки</h1>
+
+    <!-- Выбор месяца -->
+    <form method="get" action="{{ url_for('student') }}">
+        <label for="month">Select month:</label>
+        <select name="month" id="month" onchange="this.form.submit()">
+            {% for m in months %}
+                <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Таблица оценок -->
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+                <tr>
+                    <td>{{ grade.name }}</td>
+                    <td>{{ '' if grade.grade == 0 or grade.grade is none else grade.grade }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">No grades for this month.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('logout') }}">Выход</a>
+</body>
+</html>
+
+
+
